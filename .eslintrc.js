@@ -33,7 +33,8 @@ module.exports = {
     'no-multi-assign': 0,
     'prefer-rest-params': 0,
     'vue/require-prop-types': 0,
-    'no-restricted-globals': 0
+    'no-restricted-globals': 0,
+    'operator-linebreak': [2, 'after', { overrides: { '?': 'before', ':': 'before' } }]
   },
   parserOptions: {
     parser: 'babel-eslint'
