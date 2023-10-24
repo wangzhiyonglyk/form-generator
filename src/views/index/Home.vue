@@ -16,20 +16,12 @@
               <svg-icon icon-class="component" />
               {{ item.title }}
             </div>
-            <draggable
-              class="components-draggable"
-              :list="item.list"
-              :group="{ name: 'componentsGroup', pull: 'clone', put: false }"
-              :clone="cloneComponent"
-              draggable=".components-item"
-              :sort="false"
-              @end="onEnd"
+            <draggable class="components-draggable" :list="item.list"
+                       :group="{ name: 'componentsGroup', pull: 'clone', put: false }" :clone="cloneComponent"
+                       draggable=".components-item" :sort="false" @end="onEnd"
             >
-              <div
-                v-for="(element, index) in item.list"
-                :key="index"
-                class="components-item"
-                @click="addComponent(element)"
+              <div v-for="(element, index) in item.list" :key="index" class="components-item"
+                   @click="addComponent(element)"
               >
                 <div class="components-body">
                   <svg-icon :icon-class="element.__config__.tagIcon" />
@@ -62,24 +54,13 @@
       </div>
       <el-scrollbar class="center-scrollbar">
         <el-row class="center-board-row" :gutter="formConf.gutter">
-          <el-form
-            :size="formConf.size"
-            :label-position="formConf.labelPosition"
-            :disabled="formConf.disabled"
-            :label-width="formConf.labelWidth + 'px'"
+          <el-form :size="formConf.size" :label-position="formConf.labelPosition" :disabled="formConf.disabled"
+                   :label-width="formConf.labelWidth + 'px'"
           >
             <draggable class="drawing-board" :list="drawingList" :animation="340" group="componentsGroup">
-              <draggable-item
-                v-for="(item, index) in drawingList"
-                :key="item.renderKey"
-                :drawing-list="drawingList"
-                :current-item="item"
-                :index="index"
-                :active-id="activeId"
-                :form-conf="formConf"
-                @activeItem="activeFormItem"
-                @copyItem="drawingItemCopy"
-                @deleteItem="drawingItemDelete"
+              <draggable-item v-for="(item, index) in drawingList" :key="item.renderKey" :drawing-list="drawingList"
+                              :current-item="item" :index="index" :active-id="activeId" :form-conf="formConf"
+                              @activeItem="activeFormItem" @copyItem="drawingItemCopy" @deleteItem="drawingItemDelete"
               />
             </draggable>
             <div v-show="!drawingList.length" class="empty-info">
@@ -90,32 +71,15 @@
       </el-scrollbar>
     </div>
 
-    <right-panel
-      :active-data="activeData"
-      :form-conf="formConf"
-      :show-field="!!drawingList.length"
-      @tag-change="tagChange"
-      @fetch-data="fetchData"
+    <right-panel :active-data="activeData" :form-conf="formConf" :show-field="!!drawingList.length"
+                 @tag-change="tagChange" @fetch-data="fetchData"
     />
 
-    <form-drawer
-      :visible.sync="drawerVisible"
-      :form-data="formData"
-      size="100%"
-      :generate-conf="generateConf"
+    <form-drawer :visible.sync="drawerVisible" :form-data="formData" size="100%" :generate-conf="generateConf" />
+    <json-drawer size="60%" :visible.sync="jsonDrawerVisible" :json-str="JSON.stringify(formData)"
+                 @refresh="refreshJson"
     />
-    <json-drawer
-      size="60%"
-      :visible.sync="jsonDrawerVisible"
-      :json-str="JSON.stringify(formData)"
-      @refresh="refreshJson"
-    />
-    <code-type-dialog
-      :visible.sync="dialogVisible"
-      title="选择生成类型"
-      :show-file-name="showFileName"
-      @confirm="generate"
-    />
+    <code-type-dialog :visible.sync="dialogVisible" title="选择生成类型" :show-file-name="showFileName" @confirm="generate" />
     <input id="copyNode" type="hidden">
   </div>
 </template>
@@ -210,9 +174,9 @@ export default {
     // eslint-disable-next-line func-names
     'activeData.__config__.label': function (val, oldVal) {
       if (
-        this.activeData.placeholder === undefined
-        || !this.activeData.__config__.tag
-        || oldActiveId !== this.activeId
+        this.activeData.placeholder === undefined ||
+        !this.activeData.__config__.tag ||
+        oldActiveId !== this.activeId
       ) {
         return
       }
@@ -236,6 +200,9 @@ export default {
         this.saveIdGlobalDebounce(val)
       },
       immediate: true
+    },
+    click(name) {
+      console.log('click', name)
     }
   },
   mounted() {

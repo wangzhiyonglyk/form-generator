@@ -33,7 +33,7 @@ const layouts = {
         nativeOnClick={event => { activeItem(currentItem); event.stopPropagation() }}>
         <el-form-item label-width={labelWidth}
           label={config.showLabel ? config.label : ''} required={config.required}>
-          <render key={config.renderKey} conf={currentItem} onInput={ event => {
+          <render key={config.renderKey} conf={currentItem} onInput={event => {
             this.$set(config, 'defaultValue', event)
           }}>
             {child}
@@ -52,8 +52,8 @@ const layouts = {
     let child = renderChildren.apply(this, arguments)
     if (currentItem.type === 'flex') {
       child = <el-row type={currentItem.type} justify={currentItem.justify} align={currentItem.align}>
-              {child}
-            </el-row>
+        {child}
+      </el-row>
     }
     return (
       <el-col span={config.span}>
@@ -72,7 +72,7 @@ const layouts = {
   raw(h, currentItem, index, list) {
     const config = currentItem.__config__
     const child = renderChildren.apply(this, arguments)
-    return <render key={config.renderKey} conf={currentItem} onInput={ event => {
+    return <render key={config.renderKey} conf={currentItem} onInput={event => {
       this.$set(config, 'defaultValue', event)
     }}>
       {child}
