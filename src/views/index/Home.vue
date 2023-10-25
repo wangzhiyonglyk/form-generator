@@ -20,7 +20,7 @@
               :group="{ name: 'componentsGroup', pull: 'clone', put: false }" draggable=".components-item" :sort="false">
               <div v-for="(element, index) in item.children" :key="index" class="components-item">
                 <div class="components-body">
-                  <svg-icon :icon-class="element.icon" />
+                  <svg-icon :icon-class="element.icon || (element.name && element.name.replace('el-', ''))" />
                   {{ element.label }}
                 </div>
               </div>

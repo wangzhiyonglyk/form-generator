@@ -6,7 +6,9 @@
 export function vModel(renderObject, value) {
   renderObject.props.value = value
   renderObject.on.input = val => {
+    console.log('test'.val)
     this.$emit('changeProps', 'attrs.value', val)
+    this.$emit('input', val)
   }
 }
 

@@ -7,19 +7,26 @@ import { vModel } from './vModel'
 function buildDataObject(confClone, dataObject) {
   Object.keys(confClone).forEach(key => {
     const val = confClone[key]
+
+    if (key === '__config__') {
+      console.log('key', key)
+    }
     if (key === '__vModel__') {
       vModel.call(this, dataObject, confClone.__config__.defaultValue)
     } else if (dataObject[key] !== undefined) {
       if (dataObject[key] === null ||
         dataObject[key] instanceof RegExp ||
         ['boolean', 'string', 'number', 'function'].includes(typeof dataObject[key])) {
+        console.log('key1', key)
         dataObject[key] = val
       } else if (Array.isArray(dataObject[key])) {
+        console.log('key2', key)
         dataObject[key] = [...dataObject[key], ...val]
       } else {
         dataObject[key] = { ...dataObject[key], ...val }
       }
     } else {
+      console.log('key3', key)
       dataObject.attrs[key] = val
     }
   })
@@ -60,6 +67,7 @@ export default {
     }
   },
   render(h) {
+    console.log('test', this.conf)
     const dataObject = makeDataObject()
     const confClone = deepClone(this.conf)
     const children = this.$slots.default || []
@@ -72,6 +80,7 @@ export default {
 
     // 将json表单配置转化为vue render可以识别的 “数据对象（dataObject）”
     buildDataObject.call(this, confClone, dataObject)
+    console.log('test', this.conf, dataObject)
     return h(this.conf.__config__.tag, dataObject, children)
   }
 }
