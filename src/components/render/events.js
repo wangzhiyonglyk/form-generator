@@ -70,7 +70,7 @@ export function eventMethods(configClone) {
         }
         methods.push(` 
         /*
-          ${configClone.znName}
+          ${configClone.label}
           ${label === desc ? label : desc}
           ${paramsdes.join('\n')}
         */

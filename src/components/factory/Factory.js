@@ -2,15 +2,16 @@
  * 初始化组件的公共属性
  */
 
-class Factory {
-  constructor(tag, groupName, znName, icon = '', version = '1.0.0', attrs) {
+class Factory {z
+  constructor(name, tag, label, groupName, icon = '', version = '1.0.0', attrs) {
     this._standard_ = true// 用于区别是不是标准组件，旧组件，则按照旧的渲染来做
     this.id = `${tag}_${Math.random()
       .toString(36)
       .slice(8)}` // 名字中6位随机数
     this.compnentId = this.id// 用于兼容
+    this.name = name// 组件的名
     this.tag = tag // 组件标签
-    this.znName = znName // 中文名
+    this.label = label // 中文名
     this.groupName = groupName // 所属分组
     this.version = version // 版本号
     this.icon = icon || `icon-${tag}` // 图标标识

@@ -6,50 +6,43 @@ import {
   text, textarea, select, picker, datepicker, treePicker, gridPicker, upload
 } from './ReactConfig'
 
-class FormFactory extends Factory {
-  constructor(tag, groupName, znName, icon = '', version = '1.0.0', extend) {
-    super(tag, groupName, znName, icon, version)
-    let obj
-    if (tag.indexOf('el-')) {
-      // vue2，vue3表单组件
+import {
+  input, elselect, number, password, eltextarea
+} from './VueConfig'
 
+const vuefa = {
+  'el-input': input,
+  'el-select': elselect,
+  'el-number': number,
+  'el-password': password,
+  'el-textarea': eltextarea
+}
+
+const reactfa = {
+  'lan-gridPicker': gridPicker,
+  'lan-treePicker': treePicker,
+  'lan-datepicker': datepicker,
+  'lan-picker': picker,
+  'lan-select': select,
+  'lan-textarea': textarea,
+  'lan-file': upload,
+  'lan-input': text
+}
+
+class FormFactory extends Factory {
+  constructor(name, tag, groupName, label, icon = '', version = '1.0.0', extend) {
+    super(name, tag, groupName, label, icon, version)
+    let obj
+    if (name.indexOf('el-')) {
+      // vue2，vue3表单组件
+      obj = vuefa[name]()
     } else {
       // react 表单组件
-      switch (tag) {
-        case 'lan-gridPicker':
-          obj = gridPicker()
-          break
-        case 'lan-treePicker':
-          obj = treePicker()
-          break
-        case 'lan-datepicker':
-          obj = datepicker(tag.replace('lan-', ''))
-          break
-        case 'lan-picker':
-          obj = picker()
-          break
-        case 'lan-select':
-          obj = select()
-          break
-        case 'lan-textarea':
-          obj = textarea()
-          break
-        case 'lan-avatar':// 头像
-        case 'lan-file':// 文件
-        case 'lan-image':// 图片
-        case 'lan-cloud':// 云文件
-
-          obj = upload(tag.replace('lan-', ''))
-          break
-        default:
-          obj = text(tag.replace('lan-', ''))
-
-          break
-      }
+      obj = reactfa[name](name.replace('lan-', ''))
     }
-
-    this.attrs = obj.attrs
-    this.on = obj.on
+    Object.keys(obj).forEach(key => {
+      this[key] = obj[key]
+    })
   }
 }
 

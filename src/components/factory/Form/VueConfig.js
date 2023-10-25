@@ -199,7 +199,7 @@ export function number() {
  * 多行输入
  * @returns
  */
-export function textarea() {
+export function eltextarea() {
   const obj = {
     attrs: {
       ...baseConfig,
@@ -218,7 +218,7 @@ export function textarea() {
 /**
  * 选择器
  */
-export function select() {
+export function elselect() {
   const obj = {
     attrs: {
       ...baseConfig,
