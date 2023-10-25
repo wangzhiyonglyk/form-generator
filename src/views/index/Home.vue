@@ -14,16 +14,14 @@
           <div v-for="(item, listIndex) in leftComponents" :key="listIndex">
             <div class="components-title">
               <svg-icon icon-class="component" />
-              {{ item.title }}
+              {{ item.label }}
             </div>
-            <draggable class="components-draggable" :list="item.list"
-              :group="{ name: 'componentsGroup', pull: 'clone', put: false }" :clone="cloneComponent"
-              draggable=".components-item" :sort="false" @end="onEnd">
-              <div v-for="(element, index) in item.list" :key="index" class="components-item"
-                @click="addComponent(element)">
+            <draggable class="components-draggable" :list="item.children"
+              :group="{ name: 'componentsGroup', pull: 'clone', put: false }" draggable=".components-item" :sort="false">
+              <div v-for="(element, index) in item.children" :key="index" class="components-item">
                 <div class="components-body">
-                  <svg-icon :icon-class="element.__config__.tagIcon" />
-                  {{ element.__config__.label }}
+                  <svg-icon :icon-class="element.icon" />
+                  {{ element.label }}
                 </div>
               </div>
             </draggable>
@@ -41,9 +39,6 @@
         从左侧拖入或点选组件进行表单设计
       </div>
     </el-form>
-
-    <right-panel :active-data="activeData" :form-conf="formConf" :show-field="!!drawingList.length"
-      @tag-change="tagChange" @fetch-data="fetchData" />
   </div>
 </template>
 
@@ -61,6 +56,8 @@ import {
 import logo from '@/assets/logo.png'
 import CodeTypeDialog from './CodeTypeDialog'
 import DraggableItem from './DraggableItem'
+
+import components from '../../components/config'
 
 export default {
   components: {
@@ -85,20 +82,7 @@ export default {
 
       activeId: null,
 
-      leftComponents: [
-        {
-          title: '输入型组件',
-          list: inputComponents
-        },
-        {
-          title: '选择型组件',
-          list: selectComponents
-        },
-        {
-          title: '布局型组件',
-          list: layoutComponents
-        }
-      ]
+      leftComponents: components
     }
   },
   computed: {
