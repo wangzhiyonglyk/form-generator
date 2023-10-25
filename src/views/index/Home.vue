@@ -14,16 +14,16 @@
           <div v-for="(item, listIndex) in leftComponents" :key="listIndex">
             <div class="components-title">
               <svg-icon icon-class="component" />
-              {{ item.label }}
+              {{ item.title }}
             </div>
-            <draggable class="components-draggable" :list="item.children"
+            <draggable class="components-draggable" :list="item.list"
               :group="{ name: 'componentsGroup', pull: 'clone', put: false }" :clone="cloneComponent"
               draggable=".components-item" :sort="false" @end="onEnd">
-              <div v-for="(element, index) in item.children" :key="index" class="components-item"
+              <div v-for="(element, index) in item.list" :key="index" class="components-item"
                 @click="addComponent(element)">
                 <div class="components-body">
-                  <svg-icon :icon-class="element.icon || element.name.split('-')[1]" />
-                  {{ element.label }}
+                  <svg-icon :icon-class="element.__config__.tagIcon" />
+                  {{ element.__config__.label }}
                 </div>
               </div>
             </draggable>
@@ -67,7 +67,8 @@
       </el-scrollbar>
     </div>
 
-    <right-panel :active-data="activeData" :form-conf="formConf" :show-field="!!drawingList.length" />
+    <right-panel :active-data="activeData" :form-conf="formConf" :show-field="!!drawingList.length"
+      @tag-change="tagChange" @fetch-data="fetchData" />
 
     <form-drawer :visible.sync="drawerVisible" :form-data="formData" size="100%" :generate-conf="generateConf" />
     <json-drawer size="60%" :visible.sync="jsonDrawerVisible" :json-str="JSON.stringify(formData)"
@@ -92,8 +93,6 @@ import {
 import {
   exportDefault, beautifierConf, isNumberStr, titleCase, deepClone, isObjectObject
 } from '@/utils/index'
-import components from '../../components/config'
-import { create } from '@/components/factory'
 import {
   makeUpHtml, vueTemplate, vueScript, cssStyle
 } from '@/components/generator/html'
@@ -147,7 +146,20 @@ export default {
       activeData: drawingDefalut[0],
       saveDrawingListDebounce: debounce(340, saveDrawingList),
       saveIdGlobalDebounce: debounce(340, saveIdGlobal),
-      leftComponents: components
+      leftComponents: [
+        {
+          title: '输入型组件',
+          list: inputComponents
+        },
+        {
+          title: '选择型组件',
+          list: selectComponents
+        },
+        {
+          title: '布局型组件',
+          list: layoutComponents
+        }
+      ]
     }
   },
   computed: {
@@ -182,9 +194,6 @@ export default {
         this.saveIdGlobalDebounce(val)
       },
       immediate: true
-    },
-    click(name) {
-      console.log('click', name)
     }
   },
   mounted() {
@@ -240,7 +249,19 @@ export default {
       const i = this.drawingList.findIndex(item => item.__config__.renderKey === renderKey)
       if (i > -1) this.$set(this.drawingList, i, component)
     },
-
+    fetchData(component) {
+      const { dataType, method, url } = component.__config__
+      if (dataType === 'dynamic' && method && url) {
+        this.setLoading(component, true)
+        this.$axios({
+          method,
+          url
+        }).then(resp => {
+          this.setLoading(component, false)
+          this.setRespData(component, resp.data)
+        })
+      }
+    },
     setLoading(component, val) {
       const { directives } = component
       if (Array.isArray(directives)) {
@@ -254,20 +275,25 @@ export default {
     },
     onEnd(obj) {
       if (obj.from !== obj.to) {
+        this.fetchData(tempActiveData)
         this.activeData = tempActiveData
         this.activeId = this.idGlobal
       }
     },
     addComponent(item) {
       const clone = this.cloneComponent(item)
-
+      this.fetchData(clone)
       this.drawingList.push(clone)
       this.activeFormItem(clone)
     },
     cloneComponent(origin) {
-      const component = create(origin.name, origin.tag, origin.label, origin.groupName)
-      console.log('component', component)
-      return component
+      const clone = deepClone(origin)
+      const config = clone.__config__
+      config.span = this.formConf.span // 生成代码时，会根据span做精简判断
+      this.createIdAndKey(clone)
+      clone.placeholder !== undefined && (clone.placeholder += config.label)
+      tempActiveData = clone
+      return tempActiveData
     },
     createIdAndKey(item) {
       const config = item.__config__
@@ -358,7 +384,26 @@ export default {
       this.showFileName = false
       this.operationType = 'copy'
     },
-
+    tagChange(newTag) {
+      newTag = this.cloneComponent(newTag)
+      const config = newTag.__config__
+      newTag.__vModel__ = this.activeData.__vModel__
+      config.formId = this.activeId
+      config.span = this.activeData.__config__.span
+      this.activeData.__config__.tag = config.tag
+      this.activeData.__config__.tagIcon = config.tagIcon
+      this.activeData.__config__.document = config.document
+      if (typeof this.activeData.__config__.defaultValue === typeof config.defaultValue) {
+        config.defaultValue = this.activeData.__config__.defaultValue
+      }
+      Object.keys(newTag).forEach(key => {
+        if (this.activeData[key] !== undefined) {
+          newTag[key] = this.activeData[key]
+        }
+      })
+      this.activeData = newTag
+      this.updateDrawingList(newTag, this.drawingList)
+    },
     updateDrawingList(newTag, list) {
       const index = list.findIndex(item => item.__config__.formId === this.activeId)
       if (index > -1) {

@@ -3,7 +3,7 @@
  * @param {*} renderObject
  * @param {*} value
  */
-function vModel(renderObject, value) {
+export function vModel(renderObject, value) {
   renderObject.props.value = value
   renderObject.on.input = val => {
     this.$emit('changeProps', 'attrs.value', val)
@@ -16,7 +16,7 @@ function vModel(renderObject, value) {
  * @param {*} attr 属性名
  * @param {*} value 值
  */
-function vdivModel(renderObject, attr) {
+export function vdivModel(renderObject, attr) {
   renderObject.on.blur = event => {
     this.$emit('changeProps', attr, event)
   }
@@ -26,7 +26,7 @@ function vdivModel(renderObject, attr) {
  * 用于预览时绑定vModel
  * @param {*} prop
  */
-function vModelStr(configClone, prop) {
+export function vModelStr(configClone, prop) {
   // 如果指定了字段名，则使用字名与表单名结合，否则使用 id加属性名
   return ` v-model=" ${configClone.name
     ? `${configClone.formName ?? ''}.${configClone.name}` : `${configClone.id}_${prop}`} "  `
