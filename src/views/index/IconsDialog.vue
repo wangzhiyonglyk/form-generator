@@ -71,10 +71,10 @@ export default {
     },
     scrollToActive() {
       this.$nextTick(() => {
-        const $activeItem = this.active
+        const $activeComponent = this.active
           ? document.getElementsByClassName('active-item')[0]
           : this.$refs.iconWrap.childNodes[0]
-        $activeItem && $activeItem.scrollIntoView && $activeItem.scrollIntoView()
+        $activeComponent && $activeComponent.scrollIntoView && $activeComponent.scrollIntoView()
       })
     }
   }

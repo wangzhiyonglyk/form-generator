@@ -1,6 +1,6 @@
 <script>
 import { deepClone } from '@/utils/index'
-import render from '@/components/render/render.js'
+import render from '@/components/render/index.vue'
 
 const ruleTrigger = {
   'el-input': 'blur',
@@ -34,8 +34,8 @@ const layouts = {
     let child = renderChildren.apply(this, arguments)
     if (scheme.type === 'flex') {
       child = <el-row type={scheme.type} justify={scheme.justify} align={scheme.align}>
-              {child}
-            </el-row>
+        {child}
+      </el-row>
     }
     return (
       <el-col span={scheme.span}>

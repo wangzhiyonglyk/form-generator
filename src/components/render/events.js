@@ -4,15 +4,12 @@
  * @param {*} configClone
  */
 
-export function messageBind(configClone) {
+export function messageBind(configClone, dataObject) {
   ['on', 'nativeOn'].forEach(attr => {
-    const eventKeyList = Object.keys(configClone[attr] || {})
-    eventKeyList.forEach(key => {
-      const event = configClone[attr][key]// 某个事件
-      if (typeof event === 'object') {
-        // 绑定是一个对象,需要额外的参数
-        configClone[attr][key] = $event => { this.$emit(event.name, event.args, $event) }
-      }
+    const eventKeyList = configClone[attr] || []
+    eventKeyList.forEach(event => {
+      // 绑定是一个对象,需要额外的参数
+      dataObject[attr][event.name] = $event => { this.$emit(event.name, event.args, $event) }
     })
   })
 }

@@ -21,7 +21,7 @@ const baseConfig = {
   showLabel: true,
   'label-position': null, // label宽度
   'label-width': null,
-  value: null, // 绑定值
+  value: '', // 绑定值
   'show-word-limit': null,
   placeholder: null, // 输入框占位文本
   clearable: true, // 是否可清空
@@ -225,7 +225,6 @@ export function elselect() {
       multiple: false, // 多选
       'multiple-limit': null, // 多选的限制
       'value-key': null // value的key值
-
     },
     on: objectFunc.clone(baseOn),
     nativeOn: objectFunc.clone(baseNativeOn),

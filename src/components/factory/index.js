@@ -15,7 +15,7 @@ import objectFunc from '@/utils/objectFunc'
 export function create(name, tag, label, groupName, icon = '', version = '1.0.0', attrs) {
   let newComponent
   switch (groupName) {
-    case 'form':
+    case '表单':
     // 表单类型的组件
       newComponent = new FormFactory(name, tag, label, groupName, icon = '', version = '1.0.0', attrs)
       break
@@ -23,6 +23,7 @@ export function create(name, tag, label, groupName, icon = '', version = '1.0.0'
       newComponent = new Factory(name, tag, label, groupName, icon = '', version = '1.0.0', attrs)
       break
   }
+  return newComponent
 }
 
 /**

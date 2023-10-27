@@ -2,7 +2,7 @@
  * 初始化组件的公共属性
  */
 
-class Factory {z
+class Factory {
   constructor(name, tag, label, groupName, icon = '', version = '1.0.0', attrs) {
     this._standard_ = true// 用于区别是不是标准组件，旧组件，则按照旧的渲染来做
     this.id = `${tag}_${Math.random()
@@ -17,9 +17,9 @@ class Factory {z
     this.icon = icon || `icon-${tag}` // 图标标识
     this.language = 'vue2' // 组件使用的语言，vue2,vue3,react
     this.style = null // 样式
-    this.myClassName = null// 自定义的样式内容,用于自的className内容
+    this.myClassName = null// 自定义的样式内容,生成一个跟id名称一样的样式名，注意这里跟style不一样，style的权重高
     this.className = [] // 样式名称
-    this.attr = attrs// 组件用于绑定的属性
+    this.attrs = attrs// 组件用于绑定的属性
     this.on = [] // 绑定的事件
     this.nativeOn = [] // 这里专门用于vue中的标签原始事件
     this.children = [] // 子组件

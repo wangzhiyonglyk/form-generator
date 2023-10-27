@@ -32,14 +32,18 @@ const reactfa = {
 class FormFactory extends Factory {
   constructor(name, tag, groupName, label, icon = '', version = '1.0.0', extend) {
     super(name, tag, groupName, label, icon, version)
+
     let obj
-    if (name.indexOf('el-')) {
-      // vue2，vue3表单组件
-      obj = vuefa[name]()
+
+    if (name && name.indexOf('lan-') > -1) {
+      obj = reactfa[name](name.replace('lan-', ''))
     } else {
       // react 表单组件
-      obj = reactfa[name](name.replace('lan-', ''))
+      this.vModel = true// 绑定v-model
+      // vue2，vue3表单组件
+      obj = vuefa[name || 'el-input']()
     }
+
     Object.keys(obj).forEach(key => {
       this[key] = obj[key]
     })
